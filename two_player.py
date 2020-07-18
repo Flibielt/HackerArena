@@ -90,7 +90,6 @@ safeWaitForStart([agent_host1, agent_host2])
 
 def player1_commands():
     agent_host1.sendCommand("move 1")
-    time.sleep(3)
 
 def player2_commands():
     agent_host2.sendCommand("move 1")
