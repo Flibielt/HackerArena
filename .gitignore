@@ -1,2 +1,4 @@
+.vscode
+
 # Ignore __pycache__ folder
 __pycache__
