@@ -1,0 +1,20 @@
+from __future__ import print_function
+from __future__ import division
+
+from builtins import range
+from past.utils import old_div
+import MalmoPython
+import os
+import random
+import sys
+import time
+import json
+import random
+import errno
+import math
+import malmoutils
+
+malmoutils.fix_print()
+
+agent_host = MalmoPython.AgentHost()
+malmoutils.parse_command_line(agent_host)
