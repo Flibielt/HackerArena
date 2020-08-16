@@ -38,12 +38,36 @@ xml = '''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
   </ServerSection>
 
   <AgentSection mode="Survival">
-    <Name>Player1</Name>
+    <Name>Hunter</Name>
     <AgentStart>
       <Placement x="-1.5" y="227.0" z="0.5" pitch="30" yaw="0"/>
+      <Inventory>
+        <InventoryItem slot="0" type="iron_sword"/>
+        <InventoryItem slot="1" type="iron_axe"/>
+        <InventoryItem slot="2" type="bow"/>
+
+        <InvemtoryItem slot"7" type"arrow" quantity="64"/>
+        <InvemtoryItem slot"8" type"arrow" quantity="64"/>
+        
+        <InventoryItem slot="36" type="iron_helmet"/>
+        <InventoryItem slot="37" type="iron_chestplate"/>
+        <InventoryItem slot="38" type="iron_leggings"/>
+        <InventoryItem slot="39" type="iron_boots"/>
+      </Inventory>
     </AgentStart>
     <AgentHandlers>
-        <ContinuousMovementCommands turnSpeedDegs="180"/>
+      <ObservationFromFullStats/>
+      <ObservationFromGrid>
+        <Grid name="foot3x3">
+          <min x="-1" y="0" z="-1"/>
+          <max x="1" y="2" z="1"/>
+        </Grid>
+      </ObservationFromGrid>
+      <ObservationFromNearbyEntities>
+        <Range name="close_entities" xrange="5" yrange="5" zrange="2" />
+      </ObservationFromNearbyEntities>
+      <InventoryCommands/>
+      <ContinuousMovementCommands turnSpeedDegs="180"/>
     </AgentHandlers>
   </AgentSection>
 
@@ -59,4 +83,5 @@ while world_state.is_mission_running:
     world_state = agent_host.getWorldState()
     if world_state.number_of_observations_since_last_state > 0:
         msg = world_state.observations[-1].text
-        ob = json.loads(msg)
+        observations = json.loads(msg)
+        grid = observations.get(u'foot3x3', 0)
