@@ -32,6 +32,9 @@ xml = '''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
     </ServerInitialConditions>
     <ServerHandlers>
       <FlatWorldGenerator forceReset="true" generatorString="3;7,220*1,5*3,2;3;,biome_1" seed=""/>
+      <DrawingDecorator>
+        <DrawEntity x="-1.5" y="227.0" z="5" type="Zombie"/>
+      </DrawingDecorator>
       <ServerQuitFromTimeUp description="" timeLimitMs="20000"/>
       <ServerQuitWhenAnyAgentFinishes description=""/>
     </ServerHandlers>
@@ -45,14 +48,14 @@ xml = '''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
         <InventoryItem slot="0" type="iron_sword"/>
         <InventoryItem slot="1" type="iron_axe"/>
         <InventoryItem slot="2" type="bow"/>
-
-        <InvemtoryItem slot"7" type"arrow" quantity="64"/>
-        <InvemtoryItem slot"8" type"arrow" quantity="64"/>
         
-        <InventoryItem slot="36" type="iron_helmet"/>
-        <InventoryItem slot="37" type="iron_chestplate"/>
-        <InventoryItem slot="38" type="iron_leggings"/>
-        <InventoryItem slot="39" type="iron_boots"/>
+        <InventoryItem slot="7" type="arrow" quantity="64"/>
+        <InventoryItem slot="8" type="arrow" quantity="64"/>
+        
+        <InventoryItem slot="36" type="iron_boots"/>
+        <InventoryItem slot="37" type="iron_leggings"/>
+        <InventoryItem slot="38" type="iron_chestplate"/>
+        <InventoryItem slot="39" type="iron_helmet"/>
       </Inventory>
     </AgentStart>
     <AgentHandlers>
@@ -66,6 +69,7 @@ xml = '''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
       <ObservationFromNearbyEntities>
         <Range name="close_entities" xrange="5" yrange="5" zrange="2" />
       </ObservationFromNearbyEntities>
+      <ObservationFromFullInventory flat="false"/>
       <InventoryCommands/>
       <ContinuousMovementCommands turnSpeedDegs="180"/>
     </AgentHandlers>
@@ -73,15 +77,40 @@ xml = '''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 
 </Mission>'''
 my_mission = MalmoPython.MissionSpec(xml,True)
+my_mission_record = MalmoPython.MissionRecordSpec()
 
+# Attempt to start a mission:
+max_retries = 3
+for retry in range(max_retries):
+  try:
+    agent_host.startMission( my_mission, my_mission_record )
+    break
+  except RuntimeError as e:
+    if retry == max_retries - 1:
+      print("Error starting mission:",e)
+      exit(1)
+    else:
+      time.sleep(2)
+
+# Loop until mission starts:
+print("Waiting for the mission to start ", end=' ')
 world_state = agent_host.getWorldState()
 while not world_state.has_mission_begun:
+    print(".", end="")
     time.sleep(0.1)
     world_state = agent_host.getWorldState()
+    for error in world_state.errors:
+        print("Error:",error.text)
+
+print()
+print("Mission running ", end=' ')
 
 while world_state.is_mission_running:
-    world_state = agent_host.getWorldState()
-    if world_state.number_of_observations_since_last_state > 0:
-        msg = world_state.observations[-1].text
-        observations = json.loads(msg)
-        grid = observations.get(u'foot3x3', 0)
+  world_state = agent_host.getWorldState()
+  if world_state.number_of_observations_since_last_state > 0:
+    msg = world_state.observations[-1].text
+    observations = json.loads(msg)
+    grid = observations.get(u'foot3x3', 0)
+    closeEntities = observations.get(u'close_entities')
+    print(closeEntities)
+    print()
