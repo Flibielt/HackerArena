@@ -16,3 +16,11 @@ The basic commands and functionalities can be found in the [Tutorial.pdf](https:
 
 1. Launch as many Minecraft instances as needed.
 2. Run the mission with the needed Python interpreter.
+
+## Missions
+
+### Mob hunt
+
+Fight against hostile mobs.
+
+More details [here](MobHunt.md).
