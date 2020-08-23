@@ -60,5 +60,21 @@ while world_state.is_mission_running:
     observations = json.loads(msg)
     grid = observations.get(u'foot3x3', 0)
     closeEntities = observations.get(u'close_entities')
-    print(closeEntities)
+    print(observations)
     print()
+
+    # Agent commands
+    # Use the line-of-sight observation to determine when to hit and when not to hit:
+    if u'LineOfSight' in observations:
+      los = observations[u'LineOfSight']
+      type=los["type"]
+      if type == "Zombie":
+        agent_host.sendCommand("attack 1")
+        agent_host.sendCommand("attack 0")
+    # Get our position/orientation:
+    if u'Yaw' in observations:
+      current_yaw = observations[u'Yaw']
+    if u'XPos' in observations:
+      self_x = observations[u'XPos']
+    if u'ZPos' in observations:
+      self_z = observations[u'ZPos']

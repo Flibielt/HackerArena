@@ -22,7 +22,7 @@
   <AgentSection mode="Survival">
     <Name>Hunter</Name>
     <AgentStart>
-      <Placement x="-1.5" y="227.0" z="0.5" pitch="30" yaw="0"/>
+      <Placement x="-1.5" y="227.0" z="0.5" pitch="0" yaw="0"/>
       <Inventory>
         <InventoryItem slot="0" type="iron_sword"/>
         <InventoryItem slot="1" type="iron_axe"/>
@@ -45,6 +45,7 @@
           <max x="1" y="2" z="1"/>
         </Grid>
       </ObservationFromGrid>
+      <ObservationFromRay/>
       <ObservationFromNearbyEntities>
         <Range name="close_entities" xrange="5" yrange="5" zrange="2" />
       </ObservationFromNearbyEntities>
